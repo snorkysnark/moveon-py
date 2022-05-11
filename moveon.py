@@ -62,7 +62,7 @@ class MoveonClient:
             response = await self.get_raw(queue_id)
             response.raise_for_status()
 
-            xml = xmltodict.parse(response.text)
+            xml = xmltodict.parse(response.text, force_list=("rows",))
             status = xml["rest"]["get"]["status"]
 
             return xml, status
@@ -79,13 +79,6 @@ class MoveonClient:
             xml, status = await next_request()
 
         response_data = xml["rest"]["get"]["response"]
-
-        # response["data"]["rows"] should always be a list
-        if "data" in response_data and "rows" in response_data["data"]:
-            rows = response_data["data"]["rows"]
-            if not isinstance(rows, list):
-                response_data["data"]["rows"] = [rows]
-
         return response_data
 
     async def queue_and_get(
