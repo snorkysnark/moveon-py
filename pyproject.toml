@@ -6,9 +6,9 @@ authors = [
     {name = "francisthebasilisk", email = "snorkysnark@gmail.com"},
 ]
 dependencies = [
-    "parsel>=1.6.0",
     "httpx>=0.22.0",
     "anyio>=3.5.0",
+    "xmltodict>=0.13.0",
 ]
 requires-python = ">=3.9"
 license = {text = "MIT"}
