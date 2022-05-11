@@ -35,12 +35,6 @@ class MoveonClient:
     client: httpx.AsyncClient
     retry_time: float = 0.2
 
-    @staticmethod
-    def from_certificate(
-        url: str, cert: httpx._types.CertTypes, retry_time: float = 0.2
-    ):
-        return MoveonClient(url, httpx.AsyncClient(cert=cert), retry_time)
-
     async def queue_raw(self, data: dict) -> httpx.Response:
         """Queues a request, without checking for errors"""
         flat_data = copy.deepcopy(data)
