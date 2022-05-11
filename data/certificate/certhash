@@ -1,0 +1,4 @@
+#!/bin/sh
+
+openssl x509 -in moveon.cert -serial -noout
+openssl x509 -noout -fingerprint -sha256 -inform pem -in moveon.cert | awk '{gsub(":","",$0); print tolower($0)}'

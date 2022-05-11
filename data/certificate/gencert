@@ -1,0 +1,4 @@
+#!/bin/sh
+
+rm moveon.key moveon.cert 2>/dev/null
+openssl req -nodes -new -x509 -keyout moveon.key -out moveon.cert
