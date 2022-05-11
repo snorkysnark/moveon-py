@@ -2,7 +2,7 @@ import copy
 from dataclasses import dataclass
 import json
 import logging
-from typing import AsyncIterable, Optional, Tuple
+from typing import AsyncIterable, Optional
 import anyio
 import httpx
 import xmltodict
@@ -79,6 +79,13 @@ class MoveonClient:
             xml, status = await next_request()
 
         response_data = xml["rest"]["get"]["response"]
+
+        # response["data"]["rows"] should always be a list
+        if "data" in response_data and "rows" in response_data["data"]:
+            rows = response_data["data"]["rows"]
+            if not isinstance(rows, list):
+                response_data["data"]["rows"] = [rows]
+
         return response_data
 
     async def queue_and_get(
