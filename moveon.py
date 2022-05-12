@@ -24,6 +24,12 @@ class MoveonClient:
     client: httpx.AsyncClient
     retry_time: float = 0.2
 
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, exc_t, exc, tb):
+        await self.client.aclose()
+
     async def queue_raw(self, data: dict) -> httpx.Response:
         """Queues a request, without checking for errors"""
         flat_data = copy.deepcopy(data)
