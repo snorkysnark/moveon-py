@@ -1,6 +1,7 @@
 *.pyc
 __pypackages__
 .ipynb_checkpoints
+/data
 
 moveon.cert
 moveon.key
