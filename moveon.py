@@ -101,24 +101,34 @@ class MoveonClient:
         Runs queue_and_get for all availiable pages,
         starting with data["data"]["page"]
         """
-    
+
         # Don't overwrite 'page' field of the original request
         data = copy.deepcopy(data)
-    
+
         logging.info("Requesting page {}/?".format(data["data"]["page"]))
         current_xml = await self.queue_and_get(data, retry_time)
-    
+
         current_page = int(current_xml["data"]["page"])
         total_pages = int(current_xml["data"]["total"])
-    
+
         yield current_xml
-    
+
         if page_limit > 0:
             total_pages = min(page_limit, total_pages)
-    
+
         for page in range(current_page + 1, total_pages + 1):
             logging.info(f"Requesting page {page}/{total_pages}")
-    
+
             data["data"]["page"] = page
             current_xml = await self.queue_and_get(data, retry_time)
             yield current_xml
+
+    async def iter_rows_in_all_pages(
+        self, data: dict, page_limit: int = 0, retry_time: Optional[float] = None
+    ) -> AsyncIterable[dict]:
+        """Go through all availiable pages, yielding from page["data"]["rows"]"""
+        async for page in self.iter_pages(
+            data, page_limit=page_limit, retry_time=retry_time
+        ):
+            for row in page["data"]["rows"]:
+                yield row
