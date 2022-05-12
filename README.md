@@ -1,9 +1,6 @@
 # Moveon API wrapper
 
-```python
-from moveon import MoveonClient
-```
-See example in update_contacts.ipynb
+Usage: see [update_contacts.ipynb](update_contacts.ipynb)
 
 # Remapping contact ids
 ```bash
