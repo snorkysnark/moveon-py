@@ -30,6 +30,9 @@ class MoveonClient:
     async def __aexit__(self, exc_t, exc, tb):
         await self.client.aclose()
 
+    async def aclose(self):
+        await self.client.aclose()
+
     async def queue_raw(self, data: dict) -> httpx.Response:
         """Queues a request, without checking for errors"""
         flat_data = copy.deepcopy(data)
