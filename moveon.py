@@ -88,6 +88,10 @@ class MoveonClient:
             xml, status = await next_request()
 
         response_data = xml["rest"]["get"]["response"]
+        if "data" in response_data and not "rows" in response_data["data"]:
+            # 'rows' must present even if there are no records
+            response_data["data"]["rows"] = []
+
         return response_data
 
     async def queue_and_get(
