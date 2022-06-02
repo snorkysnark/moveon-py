@@ -9,13 +9,14 @@ import xmltodict
 
 
 class StatusError(Exception):
-    def __init__(self, status, message="Unexpected status") -> None:
+    def __init__(self, status, xml, message="Unexpected status") -> None:
         self.status = status
+        self.xml = xml
         self.message = message
         super().__init__(self.message)
 
     def __str__(self):
-        return f"{self.message}: {self.status}"
+        return f"{self.message}: {self.status}\n{self.xml}"
 
 
 @dataclass
@@ -55,7 +56,7 @@ class MoveonClient:
         status = xml["rest"]["queue"]["status"]
 
         if status != "success":
-            raise StatusError(status)
+            raise StatusError(status, xml)
 
         response_data = xml["rest"]["queue"]["response"]
         return json.loads(response_data)["queueId"]
@@ -81,7 +82,7 @@ class MoveonClient:
         retry_time = retry_time or self.retry_time
         while status != "success":
             if status != "processing" and status != "queued":
-                raise StatusError(status)
+                raise StatusError(status, xml)
 
             logging.info(f'Retrying get method with status "{status}"')
             await anyio.sleep(retry_time)
